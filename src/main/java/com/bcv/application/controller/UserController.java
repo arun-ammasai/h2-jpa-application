@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Status;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,6 +56,24 @@ public class UserController {
         User user = byId.orElseThrow(UserException::new);
         repository.delete(user);
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @GetMapping("users/getuserbylocation/{city}")
+    public List<User> getUserByLocation(@PathVariable(name = "city") String city) throws UserException {
+        List<User> users = repository.fetchUsersById(city);
+        if (users.size()>0) return users;
+        else throw new UserException("Users not Found");
+    }
+
+    @GetMapping("users/getuserbylocation1/{city}")
+    public ResponseEntity<List<User>> getUserByLocation1(@PathVariable(name = "city") String city) throws UserException {
+        Optional<List<User>> users = repository.fetchUsersById1(city);
+        if (users.isPresent() && users.get().size()>0) {
+            return new ResponseEntity<>(users.get(),HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>(Collections.emptyList(),HttpStatus.NOT_FOUND);
+        }
     }
 
 
