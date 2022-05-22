@@ -2,6 +2,10 @@ package com.bcv.application.entity;
 
 import javax.persistence.*;
 
+/**
+ * The persistent class for the User database table.
+ *
+ */
 @Entity
 public class User {
     @Id
